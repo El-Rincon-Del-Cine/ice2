@@ -165,48 +165,58 @@ var cacheFiles = [
     './scss/bootstrap/scss/vendor/_rfs.scss'
 ]
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', function(e) {
     console.log('Service Worker: Instalado');
-    event.waitUntil(
-        caches.open('Icecream-Store-PWA')
-            .then((cache) => {
-                return cache.addAll([
-                    
-                ]);
-            })
-    );
-});
-
-self.addEventListener('activate', (event) => {
-    const cacheWhitelist = ['Icecream-Store-PWA'];
-    console.log('Service Worker: Activado');
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
+    e.waitUntil(
+        caches.open(CACHE_NAME).then(function(cache) {
+            console.log('Service Worker: Cache abierto');
+            return cache.addAll(cacheFiles);
         })
-    );
-});
+    )
+})
 
-// Fetch
-self.addEventListener('fetch', (event) => {
-    console.log('Service Worker: Fetch solicitado para', event.request.url);
-    event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                if (response) {
+self.addEventListener('activate', function(e) {
+    console.log('Service Worker: Activado');
+    e.waitUntil()(
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(cacheNames.map(function(thisCacheName) {
+                   if(thisCacheName !== CACHE_NAME) {
+                    console.log('Service Worker: Cache viejo eliminado', thisCacheName);
+                    return caches.delete(thisCacheName);
+                   }
+            }))
+        })
+    )
+})
+
+self.addEventListener('fetch', function(e) {
+    console.log('Service Worker: Fetching', e.request.url);
+    
+    e.respondWith(
+        caches.match(e.request).then(function(response) {
+            if(response) {
+                console.log('Cache encontrada', e.request.url);
+                return response;
+            }
+            var requestClone = e.request.clone();
+            fetch(requestClone).then(function(response) {
+                if(!response){
+                    console.log('No se encontro respuesta');
                     return response;
                 }
-                return fetch(event.request);
+                var responseClone = response.clone();
+                
+                caches.open(CACHE_NAME).then(function(cache) {
+                    cache.put(e.request, responseClone);
+                    return response;
+                });
             })
-            .catch((error) => console.error('Error en la solicitud fetch', error))
-    );
-});
+            .catch(function(err){
+                console.log('Error al hacer fetch', err);
+            })
+        })
+    )
+})
 
 
 /*
