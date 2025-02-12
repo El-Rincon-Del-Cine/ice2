@@ -163,7 +163,7 @@ self.addEventListener('install', (event) => {
                     '/scss/bootstrap/scss/utilities/_stretched-link.scss',
                     '/scss/bootstrap/scss/utilities/_text.scss',
                     '/scss/bootstrap/scss/utilities/_visibility.scss',
-                    '/scss/bootstrap/scss/vendor/_rfs.scss',
+                    '/scss/bootstrap/scss/vendor/_rfs.scss'
                 ]);
             })
     );
