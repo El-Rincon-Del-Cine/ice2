@@ -18,6 +18,8 @@
         "type": "image/png"
       }
     ],
+    "start_url": "/index.html",
+    "scope": "/index.html",
     "screenshots": [
     {
       "src": "images/cel.png",
@@ -31,7 +33,5 @@
       "type": "image/png",
       "form_factor": "narrow"
     }
-    ],
-    "start_url": "/index.html",
-    "scope": "/index.html"
+    ]
   }
