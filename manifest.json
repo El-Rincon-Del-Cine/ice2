@@ -5,9 +5,7 @@
     "theme_color": "#008000",
     "background_color": "#008000",
     "display": "standalone",
-    "start_url": "/index.html",
-    "scope": "/index.html",
-    "lang": "es",
+    "lang": "es-mx",
     "icons": [
       {
         "src": "images/icons/192x192.png",
@@ -33,5 +31,7 @@
       "type": "image/png",
       "form_factor": "narrow"
     }
-    ]
+    ],
+    "start_url": "/index.html",
+    "scope": "/index.html"
   }
